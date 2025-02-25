@@ -1,14 +1,14 @@
 import React from "react";
 import { useCookies } from "react-cookie";
 
-import NameForm from "./NameForm";
+import NameForm from "./components/NameForm";
 
 function App() {
   const [cookies, setCookie] = useCookies(["name"]);
 
-  function onChange(newName) {
+  const onChange = (newName) => {
     setCookie("name", newName);
-  }
+  };
 
   return (
     <div>
