@@ -1,20 +1,18 @@
 import React from "react";
-import { useCookies } from "react-cookie";
-
-import NameForm from "./components/NameForm";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Think from "./pages/Think";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  const [cookies, setCookie] = useCookies(["name"]);
-
-  const onChange = (newName) => {
-    setCookie("name", newName);
-  };
-
   return (
-    <div>
-      <NameForm name={cookies.name} onChange={onChange} />
-      {cookies.name && <h1>Hello {cookies.name}!</h1>}
-    </div>
+    <Router>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="think" element={<Think />} />
+      </Routes>
+    </Router>
   );
 }
 
