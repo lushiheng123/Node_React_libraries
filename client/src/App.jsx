@@ -6,25 +6,24 @@ export default function App() {
   const [cookies, setCookie, removeCookie] = useCookies([
     "name",
     "backendCookie",
-  ]); // 改成 backendCookie
+  ]); // 监听 name 和 backendCookie
   const [backendResponse, setBackendResponse] = useState(null); // 存储后端返回的数据
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onChange(inputValue);
-    getClientCookieSendToBackend(); // 提交后请求后端
+    fetchBackend(); // 提交后请求后端
   };
 
   const onChange = (newName) => {
     setCookie("name", newName, {
-      path: "/", // 确保路径与后端一致
-      secure: false, // 开发环境用 false
-      sameSite: "Lax", // 允许跨域请求
+      path: "/",
+      secure: false,
+      sameSite: "Lax",
     });
   };
 
-  // 实际上是从送给后端
-  const getClientCookieSendToBackend = () => {
+  const fetchBackend = () => {
     fetch("http://localhost:4000/", {
       method: "GET",
       credentials: "include", // 确保发送 cookie
@@ -34,7 +33,6 @@ export default function App() {
       .catch((error) => console.error("Error fetching backend:", error));
   };
 
-  // 设置一个按钮，从后端获取 set-cookie 中的 cookie
   const Backend_set_cookie = () => {
     fetch("http://localhost:4000/set-cookie", {
       method: "GET",
@@ -42,11 +40,26 @@ export default function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Backend response:", data); // 调试用
-        setBackendResponse(data.message); // 更新后端响应消息
-        // 后端设置的 cookie 应该自动被浏览器和 useCookies 捕获，不需要额外 setCookie
+        console.log("Backend response:", data);
+        setBackendResponse(data.message);
+        // 读取签名 cookie
+        const signedCookie = cookies.get("backendCookie", { signed: true });
+        console.log("Signed cookie value:", signedCookie);
       })
       .catch((error) => console.error("Error fetching set-cookie:", error));
+  };
+
+  const clearBackendCookie = () => {
+    fetch("http://localhost:4000/clear-cookie", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setBackendResponse(data.message);
+        removeCookie("backendCookie", { path: "/" });
+      })
+      .catch((error) => console.error("Error clearing cookie:", error));
   };
 
   return (
@@ -71,14 +84,12 @@ export default function App() {
         )}
       </div>
       {backendResponse && <p>Backend Response: {backendResponse}</p>}
-      <button onClick={handleSubmit}>Fetch Client Cookie (Show Cookies)</button>
+      <button onClick={handleSubmit}>Fetch Backend (Show Cookies)</button>
       <button onClick={Backend_set_cookie}>Get Backend Cookie</button>
       <button onClick={() => removeCookie("name", { path: "/" })}>
         Clear Frontend Cookie
       </button>
-      <button onClick={() => removeCookie("backendCookie", { path: "/" })}>
-        Clear Backend Cookie
-      </button>
+      <button onClick={clearBackendCookie}>Clear Backend Cookie</button>
     </div>
   );
 }

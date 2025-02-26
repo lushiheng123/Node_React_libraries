@@ -14,28 +14,40 @@ app.use(
   })
 );
 
-// 启用 cookie-parser
-app.use(cookieParser());
+// 启用 cookie-parser（设置密钥）
+app.use(cookieParser("zhenghaoxi")); // 设置签名密钥
 
 // 读取 cookie 的路由
 app.get("/", (req, res) => {
   console.log("Cookies:", req.cookies);
+  console.log("Signed Cookies:", req.signedCookies); // 打印签名 cookie
   res.send(`
     <h1>Hello World</h1>
     <h2>All Cookies: ${JSON.stringify(req.cookies)}</h2>
+    <h2>Signed Cookies: ${JSON.stringify(req.signedCookies)}</h2>
   `);
 });
 
 app.get("/set-cookie", (req, res) => {
-  // 后端设置一个 cookie 送给前端
+  // 后端设置一个签名 cookie 送给前端
   res.cookie("backendCookie", "BackendSet", {
-    // 改成英文名称
     path: "/",
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 天后过期
     secure: false, // 开发环境用 false
     sameSite: "Lax", // 允许跨域请求
+    signed: true, // 设置为签名 cookie
   });
-  res.json({ message: "Cookie set from backend" });
+  res.json({ message: "Signed cookie set from backend" });
+});
+
+app.get("/clear-cookie", (req, res) => {
+  // 清除后端设置的 cookie
+  res.clearCookie("backendCookie", {
+    path: "/",
+    secure: false,
+    sameSite: "Lax",
+  });
+  res.json({ message: "Cookie cleared from backend" });
 });
 
 // 启动服务器
