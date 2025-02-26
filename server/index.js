@@ -20,21 +20,25 @@ app.use(cookieParser());
 // 读取 cookie 的路由
 app.get("/", (req, res) => {
   console.log("Cookies:", req.cookies);
+  res.send(`
+    <h1>Hello World</h1>
+    <h2>All Cookies: ${JSON.stringify(req.cookies)}</h2>
+  `);
 });
 
-// 新增设置 cookie 的路由
 app.get("/set-cookie", (req, res) => {
-  // 后端设置一个 cookie
-  res.cookie("serverName", "BackendSet", {
-    path: "/", // 确保 cookie 可在所有路径下访问
+  // 后端设置一个 cookie 送给前端
+  res.cookie("backendCookie", "BackendSet", {
+    // 改成英文名称
+    path: "/",
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 天后过期
     secure: false, // 开发环境用 false
     sameSite: "Lax", // 允许跨域请求
   });
-  res.json({ message: "Cookie set from backend!" });
+  res.json({ message: "Cookie set from backend" });
 });
 
 // 启动服务器
 app.listen(process.env.SERVER_PORT || 4000, () => {
-  console.log(`Listening on port ${process.env.PORT || 4000}`);
+  console.log(`Listening on port ${process.env.SERVER_PORT || 4000}`);
 });

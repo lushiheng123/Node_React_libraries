@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 
 export default function App() {
   const [inputValue, setInputValue] = useState("");
-  const [cookies, setCookie, removeCookie] = useCookies(["name", "serverName"]); // 监听 name 和 serverName
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "name",
+    "backendCookie",
+  ]); // 改成 backendCookie
   const [backendResponse, setBackendResponse] = useState(null); // 存储后端返回的数据
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onChange(inputValue);
-    fetchBackend(); // 提交后请求后端
+    getClientCookieSendToBackend(); // 提交后请求后端
   };
 
   const onChange = (newName) => {
@@ -20,18 +23,30 @@ export default function App() {
     });
   };
 
-  const fetchBackend = () => {
-    fetch("http://localhost:4000/set-cookie", {
-      // 改为请求 /set-cookie 路由
+  // 实际上是从送给后端
+  const getClientCookieSendToBackend = () => {
+    fetch("http://localhost:4000/", {
       method: "GET",
       credentials: "include", // 确保发送 cookie
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setBackendResponse(data.message); // 显示后端返回的消息
-        console.log("Backend response:", data);
-      })
+      .then((response) => response.text())
+      .then((data) => setBackendResponse(data))
       .catch((error) => console.error("Error fetching backend:", error));
+  };
+
+  // 设置一个按钮，从后端获取 set-cookie 中的 cookie
+  const Backend_set_cookie = () => {
+    fetch("http://localhost:4000/set-cookie", {
+      method: "GET",
+      credentials: "include", // 确保发送 cookie
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Backend response:", data); // 调试用
+        setBackendResponse(data.message); // 更新后端响应消息
+        // 后端设置的 cookie 应该自动被浏览器和 useCookies 捕获，不需要额外 setCookie
+      })
+      .catch((error) => console.error("Error fetching set-cookie:", error));
   };
 
   return (
@@ -48,15 +63,21 @@ export default function App() {
         <button type="submit">Submit</button>
       </form>
       <div>
-        {cookies.name && <h1>Hello {cookies.name}!</h1>}
-        {cookies.serverName && <h2>Backend Cookie: {cookies.serverName}</h2>}
+        {/* 显示前端设置的 cookie */}
+        {cookies.name && <h1>Frontend Cookie (Name): {cookies.name}</h1>}
+        {/* 显示后端设置的 cookie */}
+        {cookies.backendCookie && (
+          <h2>Backend Cookie: {cookies.backendCookie}</h2>
+        )}
       </div>
-      {backendResponse && <p>{backendResponse}</p>}
+      {backendResponse && <p>Backend Response: {backendResponse}</p>}
+      <button onClick={handleSubmit}>Fetch Client Cookie (Show Cookies)</button>
+      <button onClick={Backend_set_cookie}>Get Backend Cookie</button>
       <button onClick={() => removeCookie("name", { path: "/" })}>
-        Clear Name Cookie
+        Clear Frontend Cookie
       </button>
-      <button onClick={() => removeCookie("serverName", { path: "/" })}>
-        Clear Server Cookie
+      <button onClick={() => removeCookie("backendCookie", { path: "/" })}>
+        Clear Backend Cookie
       </button>
     </div>
   );
