@@ -9,7 +9,14 @@ git commit -m "first commit"
 git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
 git push -u origin jsonwebtoken
 ```
-
+```sh
+git init
+git git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
+git remote -v
+git fetch origin
+git branch -r
+git pull origin jsonwebtoken
+```
 ![alt text](README_Images/README/image-7.png)
 
 # 1. 初始化前后端
