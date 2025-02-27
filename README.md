@@ -11,6 +11,14 @@ git commit -m "first commit"
 git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
 git push -u origin cookie-parser
 ```
+```sh
+git init
+git git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
+git remote -v
+git fetch origin
+git branch -r
+git pull origin cookie-parser
+```
 
 # 1. 初始化前后端,安装 cookie-parser
 
