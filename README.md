@@ -12,7 +12,14 @@ git commit -m "first commit"
 git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
 git push -u origin react-cookie
 ```
-
+```sh
+git init
+git git remote add origin git@github.com:lushiheng123/Node_React_libraries.git
+git remote -v
+git fetch origin
+git branch -r
+git pull origin react-cookie
+```
 ## 1.安装 react 项目，作为 clint 里面的前端
 
 ```sh
