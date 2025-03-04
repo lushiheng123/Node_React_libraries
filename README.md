@@ -1,7 +1,6 @@
 <h1 align="center">valtio状态库学习</h1>
 
 [valito](https://www.npmjs.com/package/valtio)
-![alt text](README_Images/README/image.png)
 
 ```sh
 git init
