@@ -1,5 +1,6 @@
 <h1 align="center">valtio状态库学习</h1>
 
+#1. 暂时不用
 [valito](https://www.npmjs.com/package/valtio)
 
 ```sh
