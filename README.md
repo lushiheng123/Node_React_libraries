@@ -16,3 +16,9 @@ git fetch origin
 git branch -r
 git pull origin gh-pages
 ```
+
+# 1. 第一步
+
+> npm install gh-pages
+
+# 2. 第二步，
