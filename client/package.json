@@ -1,7 +1,7 @@
 {
   "name": "client",
   "private": true,
-  "homepage": "https://lushiheng123.github.io/Node_React_libraries/valtio/",
+  "homepage": "https://lushiheng123.github.io/Node_React_libraries/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
