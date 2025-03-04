@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
+import React from "react";
+import { proxy, useSnapshot } from "valtio";
+import { useEffect } from "react";
+// 创建一个全局状态对象，使用 proxy 包裹
+import { state } from "./state/state";
+// 一个简单的计时器组件，展示 count 并允许增加
+const Counter = () => {
+  const snap = useSnapshot(state);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      {/* 显示当前 count */}
+      <div>Count: {snap.count}</div>
+      {/* 显示固定文本 */}
+      <div>Text: {snap.text}</div>
+      {/* 点击按钮增加 count */}
+      <button onClick={() => ++state.count}>Increment</button>
+    </div>
+  );
+};
 
-export default App
+// 一个外部函数，用于定时修改状态（模拟“随时随地修改”）
+const startInterval = () => {
+  setInterval(() => {
+    // 每 1 秒增加 count
+    ++state.count;
+  }, 1000);
+};
+
+// 主组件
+export default function App() {
+  useEffect(() => {
+    startInterval();
+  }, []); // 仅在组件挂载时执行一次
+
+  return (
+    <div>
+      <h1>Valtio Example</h1>
+      <Counter />
+    </div>
+  );
+}
