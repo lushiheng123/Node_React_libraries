@@ -19,6 +19,13 @@ git branch -r
 git pull origin zod
 ```
 
+# 目录
+
+- [项目初始化](#1-项目初始化都用-ts)
+- [safePrase 安全输出](#2-用safeprase而不是-prase-保证不会报错)
+- [创建 object 对象](#3-创建-object-对象)
+- [coerce 强制变字符串类型](#4coerce强制变字符串类型)
+
 # 1. 项目初始化，都用 ts
 
 ### 前端 client/:
@@ -57,4 +64,31 @@ console.log(mySchema.safeParse(12)); // 输出: { success: false, error: ZodErro
 
 ![alt text](README_Images/README/image.png)
 
-# 3.
+# 3. 创建 object 对象
+
+```ts
+import { z } from "zod";
+
+const User = z.object({
+  username: z.string(),
+});
+
+// 使用 safeParse 检查
+const safeResult = User.safeParse({ username: "Ludwig" });
+console.log("Safe parse result:", safeResult); // 输出: { success: true, data: { username: "Ludwig" } }
+
+// 测试错误情况
+const invalidResult = User.safeParse({ username: 123 });
+console.log("Invalid parse result:", invalidResult); // 输出: { success: false, error: ZodError }
+```
+
+# 4.`coerce`强制变字符串类型
+
+```ts
+import { z } from "zod";
+const schema = z.coerce.string();
+console.log(schema.parse("tuna")); // => "tuna"
+console.log(schema.parse(12)); // => "12"
+```
+
+![alt text](README_Images/README/image-1.png)

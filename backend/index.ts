@@ -1,12 +1,11 @@
 import { z } from "zod";
+const tuna = z.literal("tuna");
+const twelve = z.literal(12);
+const twobig = z.literal(2n); // bigint literal
+const tru = z.literal(true);
 
-// 创建一个字符串模式的 schema
-const mySchema = z.string();
+const terrificSymbol = Symbol("terrific");
+const terrific = z.literal(terrificSymbol);
 
-// 解析
-// console.log(mySchema.parse("tuna")); // 输出: "tuna"
-// console.log(mySchema.parse(12)); // 抛出 ZodError
-
-// safeparse不会中断程序
-console.log(mySchema.safeParse("tuna")); // 输出: { success: true, data: "tuna" }
-console.log(mySchema.safeParse(12)); // 输出: { success: false, error: ZodError }
+// retrieve literal value
+tuna.value; // "tuna"
