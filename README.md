@@ -105,4 +105,6 @@ export default App;
 > data-aos-anchor-placement="bottom-center">
 >
 # 4. `data-aos-once="true"`不管怎么样，只做一次动画
+# 5. `data-aos="slide-up"`从下到上
+![chrome-capture-2025-3-16 (4)](https://github.com/user-attachments/assets/18ebf8a5-aee4-44de-8b5c-5af5a024d72d)
 
