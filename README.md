@@ -103,3 +103,6 @@ export default App;
 > data-aos-anchor-placement="top-center"
 > data-aos-anchor-placement="center-center">
 > data-aos-anchor-placement="bottom-center">
+>
+# 4. `data-aos-once="true"`不管怎么样，只做一次动画
+
