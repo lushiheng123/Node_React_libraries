@@ -91,6 +91,16 @@ export default App;
 ### data-aos-easing="ease-out-cubic"开始快后来慢
 
 ![alt text](<README_Images/README/chrome-capture-2025-3-16 (2).gif>)
+### `ease-in-sine`正弦函数
+```jsx
+ AOS.init({
+      offset: 200,
+      duration: 800,
+      easing: "ease-in-sine",
+      delay:100,
+    
+    })
+```
 
 ### `data-aos-offset="0"` 元素进入视口时立即触发动画
 
