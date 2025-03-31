@@ -1,0 +1,8 @@
+{
+  "welcome": "欢迎使用我的应用",
+  "switch_language": "切换语言",
+  "greeting": "你好, {{name}}!",
+  "items": "你有 {{count}} 个项目",
+  "items_0": "你没有项目",
+  "items_1": "你有 1 个项目"
+}

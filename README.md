@@ -1,5 +1,15 @@
 <h1 align="center">react-i18next库学习</h1>
 
+## 目录
+
+- [环境安装](#环境安装)
+- [1. 创建 locals/en.json 和 zh.json 文件](#1-创建-localsenjson-和-zhjson-文件)
+- [2. 用`select`和`option`可以做一个下拉框优化一下前端](#2-用select和option可以做一个下拉框优化一下前端)
+- [3. 根据用户的浏览器语言自动设置默认语言](#3根据用户的浏览器语言自动设置默认语言)
+- [4. 动态加载语言文件](#4-动态加载语言文件)
+- [5. 调整文件结构](#5-调整文件结构)
+- [6. 复杂翻译](#6-复杂翻译)
+
 ```sh
 git init
 git checkout -b i18next
@@ -110,3 +120,152 @@ export default App;
 ### 效果
 
 ![alt text](README_Images/README/chrome-capture-2025-3-31.gif)
+
+# 2. 用`select`和`option`可以做一个下拉框优化一下前端
+
+```jsx
+import { useTranslation } from "react-i18next";
+import React from "react";
+
+function App() {
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
+  return (
+    <div className="items-center justify-center flex flex-col w-[100vw] h-[100vh]">
+      <div className="bg-yellow-200 text-red-500 p-4 rounded">
+        <div className="">{t("welcome")}</div>
+        <div className="mt-2">
+          {/* 显示当前语言 */}
+          <p>当前语言: {i18n.language === "en" ? "English" : "中文"}</p>
+          {/* 下拉菜单切换语言 */}
+          <select
+            value={i18n.language}
+            onChange={(e) => changeLanguage(e.target.value)}
+            className="mt-2 p-1 border rounded"
+          >
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### 效果
+
+![alt text](README_Images/README/image.png)
+
+# 3.根据用户的浏览器语言自动设置默认语言。我们可以使用 `i18next-browser-languagedetector` 插件。
+
+```sh
+npm install i18next-browser-languagedetector
+```
+
+```jsx
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import en from "./locales/en.json";
+import zh from "./locales/zh.json";
+
+i18n
+  .use(LanguageDetector) // 添加语言检测
+  .use(initReactI18next) // 绑定 react-i18next
+  .init({
+    resources: {
+      en: { translation: en },
+      zh: { translation: zh },
+    },
+    fallbackLng: "zh", // 回退语言
+    interpolation: {
+      escapeValue: false,
+    },
+    detection: {
+      order: ["navigator", "htmlTag", "path", "subdomain"], // 检测顺序
+      caches: ["localStorage"], // 将语言选择缓存到 localStorage
+    },
+  });
+
+export default i18n;
+```
+
+# 4. 动态加载语言文件
+
+### 目前语言文件是静态导入的（import en from './locales/en.json'）。如果你的项目语言文件很多，或者需要按需加载，可以使用 `i18next-http-backend`动态加载。
+
+```sh
+npm install i18next-http-backend
+```
+
+# 5. 调整文件结构
+
+![alt text](README_Images/README/image-2.png)
+
+# 6. 复杂翻译
+
+![alt text](README_Images/README/image-3.png)
+
+```json
+{
+  "welcome": "Welcome to my app",
+  "switch_language": "Switch Language",
+  "greeting": "Hello, {{name}}!",
+  "items": "You have {{count}} items",
+  "items_0": "You have no items",
+  "items_1": "You have 1 item"
+}
+```
+
+```json
+{
+  "welcome": "欢迎使用我的应用",
+  "switch_language": "切换语言",
+  "greeting": "你好, {{name}}!",
+  "items": "你有 {{count}} 个项目",
+  "items_0": "你没有项目",
+  "items_1": "你有 1 个项目"
+}
+```
+
+```jsx
+import { useTranslation } from "react-i18next";
+import React from "react";
+
+function App() {
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
+  return (
+    <div className="items-center justify-center flex flex-col w-[100vw] h-[100vh]">
+      <div className="bg-yellow-200 text-red-500 p-4 rounded">
+        <div>{t("welcome")}</div>
+        <div>{t("greeting", { name: "Alice" })}</div>
+        <div>{t("items", { count: 0 })}</div>
+        <div>{t("items", { count: 1 })}</div>
+        <div>{t("items", { count: 5 })}</div>
+        <select
+          value={i18n.language}
+          onChange={(e) => changeLanguage(e.target.value)}
+          className="mt-2 p-1 border rounded"
+        >
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```

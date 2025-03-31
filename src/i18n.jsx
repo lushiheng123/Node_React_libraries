@@ -1,19 +1,19 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './locales/en.json';
-import zh from './locales/zh.json';
+import HttpBackend from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
-  .use(initReactI18next) // 绑定 react-i18next
+  .use(HttpBackend) // 动态加载语言文件
+  .use(LanguageDetector)
+  .use(initReactI18next)
   .init({
-    resources: {
-      en: { translation: en }, // 英文翻译
-      zh: { translation: zh }, // 中文翻译
-    },
-    lng: 'zh', // 默认语言
-    fallbackLng: 'zh', // 如果当前语言翻译缺失，回退到英文
+    fallbackLng: 'zh',
     interpolation: {
-      escapeValue: false, // React 默认会处理 XSS，不需要额外转义
+      escapeValue: false,
+    },
+    backend: {
+      loadPath: '/locales/{{lng}}.json', // 动态加载路径
     },
   });
 
